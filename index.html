@@ -1,0 +1,1189 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>SubNet Quest</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#0a0f1e;--bg2:#111827;--card:#1a2235;--card2:#1e2d47;
+  --accent:#00d4ff;--accent2:#7c3aed;--accent3:#10b981;--accent4:#f59e0b;
+  --danger:#ef4444;--text:#f0f6ff;--text2:#94a3b8;--border:#2a3a5c;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse at 20% 20%,rgba(0,212,255,.07) 0%,transparent 60%),radial-gradient(ellipse at 80% 80%,rgba(124,58,237,.07) 0%,transparent 60%);pointer-events:none;z-index:0;}
+.screen{display:none;min-height:100vh;position:relative;z-index:1;}
+.screen.active{display:flex;flex-direction:column;}
+
+/* TOP BAR */
+.top-bar{display:flex;align-items:center;justify-content:space-between;padding:12px 18px;background:rgba(26,34,53,.97);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100;backdrop-filter:blur(10px);}
+.logo{font-family:'Orbitron',monospace;font-size:1rem;font-weight:900;color:var(--accent);}
+.logo span{color:var(--accent2);}
+
+/* BUTTONS */
+.btn-primary{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;border:none;border-radius:14px;padding:14px 28px;font-family:'Nunito',sans-serif;font-size:1rem;font-weight:800;cursor:pointer;box-shadow:0 4px 20px rgba(0,212,255,.3);transition:all .2s;width:100%;max-width:320px;}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 6px 28px rgba(0,212,255,.4);}
+.btn-sec{background:var(--card2);border:1px solid var(--border);color:var(--text);border-radius:12px;padding:12px;font-family:'Nunito',sans-serif;font-size:.9rem;font-weight:700;cursor:pointer;transition:all .2s;}
+.btn-sec:hover{background:var(--border);}
+.btn-go{background:linear-gradient(135deg,var(--accent),var(--accent2));border:none;color:#fff;border-radius:12px;padding:13px;font-family:'Nunito',sans-serif;font-size:.9rem;font-weight:800;cursor:pointer;transition:all .2s;box-shadow:0 3px 15px rgba(0,212,255,.3);}
+.btn-go:hover{transform:translateY(-1px);}
+
+/* ===== HOME ===== */
+#screen-home{align-items:center;justify-content:center;padding:30px 20px;text-align:center;}
+.hero-badge{display:inline-block;background:linear-gradient(135deg,rgba(0,212,255,.15),rgba(124,58,237,.15));border:1px solid var(--border);border-radius:100px;padding:6px 18px;font-size:.75rem;font-weight:700;color:var(--accent);letter-spacing:2px;text-transform:uppercase;margin-bottom:16px;}
+.hero-title{font-family:'Orbitron',monospace;font-size:clamp(2.2rem,9vw,3.8rem);font-weight:900;line-height:1.05;margin-bottom:8px;background:linear-gradient(135deg,#00d4ff,#7c3aed);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.hero-sub{font-size:.95rem;color:var(--text2);margin-bottom:6px;font-weight:700;}
+.hero-desc{font-size:.85rem;color:var(--text2);max-width:360px;line-height:1.6;margin-bottom:24px;}
+.info-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;width:100%;max-width:340px;margin-bottom:20px;}
+.info-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px 8px;text-align:center;}
+.info-card .ic-icon{font-size:1.3rem;margin-bottom:4px;}
+.info-card .ic-val{font-family:'Orbitron',monospace;font-size:.95rem;color:var(--accent4);font-weight:700;}
+.info-card .ic-label{font-size:.68rem;color:var(--text2);margin-top:2px;}
+.school-tag{font-size:.78rem;color:var(--text2);margin-bottom:20px;}
+
+/* NAME INPUT */
+.name-box{width:100%;max-width:320px;background:var(--card);border:2px solid var(--border);border-radius:14px;padding:16px;margin-bottom:16px;}
+.name-box label{display:block;font-size:.82rem;font-weight:800;color:var(--accent);margin-bottom:8px;text-transform:uppercase;letter-spacing:1px;}
+.name-box input{width:100%;background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:10px 14px;color:var(--text);font-family:'Nunito',sans-serif;font-size:.95rem;font-weight:700;outline:none;}
+.name-box input:focus{border-color:var(--accent);}
+
+/* ===== MATERI ===== */
+#screen-materi{padding:0;}
+.materi-content{padding:18px;flex:1;}
+.section-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(0,212,255,.1);border:1px solid rgba(0,212,255,.3);border-radius:100px;padding:4px 14px;font-size:.72rem;font-weight:800;color:var(--accent);margin-bottom:14px;text-transform:uppercase;letter-spacing:1px;}
+.materi-title{font-size:1.3rem;font-weight:900;margin-bottom:6px;}
+.materi-sub{font-size:.84rem;color:var(--text2);margin-bottom:18px;line-height:1.6;}
+.concept-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:15px;margin-bottom:12px;position:relative;overflow:hidden;}
+.concept-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:linear-gradient(to bottom,var(--accent),var(--accent2));}
+.concept-card h3{font-size:.93rem;font-weight:800;margin-bottom:7px;color:var(--accent);}
+.concept-card p{font-size:.83rem;color:var(--text2);line-height:1.65;}
+.formula{margin-top:8px;background:rgba(0,212,255,.06);border:1px solid rgba(0,212,255,.2);border-radius:10px;padding:9px 12px;font-family:'Orbitron',monospace;font-size:.75rem;color:var(--accent);line-height:1.7;}
+.ip-table{width:100%;border-collapse:collapse;margin:10px 0;font-size:.8rem;}
+.ip-table th{background:rgba(0,212,255,.12);padding:8px;text-align:center;font-weight:800;color:var(--accent);border:1px solid var(--border);}
+.ip-table td{padding:7px 8px;border:1px solid var(--border);text-align:center;color:var(--text2);}
+.ip-table tr:nth-child(even) td{background:rgba(255,255,255,.02);}
+.tip-box{background:linear-gradient(135deg,rgba(16,185,129,.1),rgba(0,212,255,.05));border:1px solid rgba(16,185,129,.3);border-radius:12px;padding:12px 14px;margin:12px 0;font-size:.82rem;color:var(--text);line-height:1.65;}
+.tip-box strong{color:var(--accent3);}
+.warn-box{background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.3);border-radius:12px;padding:12px 14px;margin:12px 0;font-size:.82rem;color:var(--text);line-height:1.65;}
+.warn-box strong{color:var(--accent4);}
+.progress-nav{padding:14px 18px;background:rgba(26,34,53,.97);border-top:1px solid var(--border);display:flex;gap:10px;}
+
+/* MATERI TABS */
+.tab-bar{display:flex;gap:6px;overflow-x:auto;padding:14px 18px 0;background:var(--bg2);border-bottom:1px solid var(--border);scrollbar-width:none;}
+.tab-bar::-webkit-scrollbar{display:none;}
+.tab-btn{flex-shrink:0;background:transparent;border:1px solid var(--border);border-bottom:none;border-radius:10px 10px 0 0;padding:8px 14px;color:var(--text2);font-family:'Nunito',sans-serif;font-size:.8rem;font-weight:700;cursor:pointer;transition:all .2s;}
+.tab-btn.active{background:var(--card);color:var(--accent);border-color:var(--accent);}
+.tab-content{display:none;}
+.tab-content.active{display:block;}
+
+/* IP VISUAL */
+.ip-visual{display:flex;gap:4px;justify-content:center;margin:10px 0;}
+.ip-octet{flex:1;background:var(--card2);border:2px solid var(--border);border-radius:10px;padding:8px 4px;text-align:center;}
+.ip-octet .oct-val{font-family:'Orbitron',monospace;font-size:1rem;font-weight:700;color:var(--accent);}
+.ip-octet .oct-bit{font-size:.58rem;color:var(--text2);margin-top:2px;letter-spacing:.5px;}
+.ip-octet .oct-label{font-size:.62rem;color:var(--text2);margin-top:3px;font-weight:700;}
+
+/* ===== LEVEL SELECT ===== */
+#screen-levels{padding:0;}
+.levels-wrap{padding:18px;flex:1;}
+.level-cards{display:flex;flex-direction:column;gap:12px;}
+.level-card{background:var(--card);border:2px solid var(--border);border-radius:16px;padding:16px;display:flex;align-items:center;gap:14px;cursor:pointer;transition:all .2s;position:relative;overflow:hidden;}
+.level-card:hover:not(.locked){transform:translateY(-2px);border-color:var(--accent);box-shadow:0 0 20px rgba(0,212,255,.2);}
+.level-card.locked{opacity:.5;cursor:not-allowed;}
+.level-card.completed{border-color:var(--accent3);}
+.level-card.completed::after{content:'✓ SELESAI';position:absolute;top:10px;right:12px;color:var(--accent3);font-size:.7rem;font-weight:900;letter-spacing:1px;}
+.lc-num{width:50px;height:50px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-family:'Orbitron',monospace;font-size:1.1rem;font-weight:900;flex-shrink:0;}
+.lv1 .lc-num{background:rgba(16,185,129,.15);color:var(--accent3);border:2px solid rgba(16,185,129,.4);}
+.lv2 .lc-num{background:rgba(0,212,255,.15);color:var(--accent);border:2px solid rgba(0,212,255,.4);}
+.lv3 .lc-num{background:rgba(124,58,237,.15);color:var(--accent2);border:2px solid rgba(124,58,237,.4);}
+.lc-info h3{font-size:.95rem;font-weight:800;margin-bottom:2px;}
+.lc-info p{font-size:.76rem;color:var(--text2);}
+.lc-info .lc-type{font-size:.68rem;color:var(--accent4);font-weight:700;margin-top:4px;text-transform:uppercase;letter-spacing:.5px;}
+.lc-stars{margin-top:4px;font-size:.85rem;}
+.lc-meta{margin-left:auto;text-align:right;flex-shrink:0;}
+.lc-meta .pts{font-family:'Orbitron',monospace;font-size:.78rem;color:var(--accent4);font-weight:700;}
+.lc-meta .qs{font-size:.68rem;color:var(--text2);margin-top:2px;}
+
+/* ===== GAME SCREEN ===== */
+#screen-game{padding:0;}
+.game-header{padding:12px 18px;background:rgba(26,34,53,.97);border-bottom:1px solid var(--border);}
+.game-meta{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;}
+.game-level-tag{font-size:.72rem;font-weight:800;color:var(--accent);text-transform:uppercase;letter-spacing:1px;}
+.game-hud{display:flex;gap:12px;align-items:center;}
+.hud-item{display:flex;align-items:center;gap:4px;font-family:'Orbitron',monospace;font-size:.78rem;font-weight:700;}
+.hud-timer{color:var(--danger);}
+.hud-score{color:var(--accent4);}
+.hud-combo{color:var(--accent3);}
+.pb-wrap{background:var(--card2);border-radius:100px;height:5px;overflow:hidden;}
+.pb-fill{height:100%;border-radius:100px;background:linear-gradient(90deg,var(--accent),var(--accent2));transition:width .4s ease;}
+
+.game-body{padding:18px;flex:1;overflow-y:auto;}
+.q-num-tag{font-size:.72rem;color:var(--text2);font-weight:700;margin-bottom:6px;}
+.q-type-tag{display:inline-block;background:rgba(245,158,11,.12);border:1px solid rgba(245,158,11,.3);border-radius:100px;padding:2px 10px;font-size:.68rem;font-weight:800;color:var(--accent4);margin-bottom:10px;text-transform:uppercase;letter-spacing:.5px;}
+.q-text{font-size:1rem;font-weight:700;line-height:1.5;margin-bottom:10px;}
+.q-hint{font-size:.78rem;color:var(--accent);font-family:'Orbitron',monospace;background:rgba(0,212,255,.06);border:1px solid rgba(0,212,255,.2);border-radius:10px;padding:8px 12px;margin-bottom:16px;word-break:break-all;line-height:1.5;}
+
+/* OPTION BUTTONS */
+.options-grid{display:flex;flex-direction:column;gap:8px;}
+.opt-btn{background:var(--card);border:2px solid var(--border);border-radius:12px;padding:11px 14px;color:var(--text);font-family:'Nunito',sans-serif;font-size:.88rem;font-weight:700;cursor:pointer;text-align:left;transition:all .15s;display:flex;align-items:center;gap:10px;position:relative;overflow:hidden;}
+.opt-btn:hover:not(:disabled){border-color:var(--accent);background:rgba(0,212,255,.05);}
+.opt-btn.correct{border-color:var(--accent3);background:rgba(16,185,129,.1);color:var(--accent3);}
+.opt-btn.wrong{border-color:var(--danger);background:rgba(239,68,68,.1);color:#fca5a5;}
+.opt-btn:disabled{cursor:not-allowed;}
+.opt-letter{width:26px;height:26px;border-radius:7px;background:var(--card2);display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:800;flex-shrink:0;font-family:'Orbitron',monospace;}
+.opt-btn.correct .opt-letter{background:var(--accent3);color:#fff;}
+.opt-btn.wrong .opt-letter{background:var(--danger);color:#fff;}
+
+/* DRAG DROP */
+.dd-container{margin-bottom:16px;}
+.dd-ip-list{display:flex;flex-wrap:wrap;gap:8px;padding:12px;background:var(--card2);border:1px solid var(--border);border-radius:12px;min-height:52px;margin-bottom:12px;}
+.dd-chip{background:linear-gradient(135deg,var(--accent2),var(--accent));color:#fff;border:none;border-radius:8px;padding:6px 12px;font-family:'Orbitron',monospace;font-size:.72rem;font-weight:700;cursor:grab;user-select:none;transition:all .15s;}
+.dd-chip:active{cursor:grabbing;opacity:.7;}
+.dd-chip.placed{opacity:.4;pointer-events:none;}
+.dd-zones{display:flex;flex-direction:column;gap:8px;}
+.dd-zone{background:var(--card);border:2px dashed var(--border);border-radius:12px;padding:10px 14px;display:flex;align-items:center;justify-content:space-between;min-height:48px;transition:all .2s;}
+.dd-zone.dragover{border-color:var(--accent);background:rgba(0,212,255,.05);}
+.dd-zone.correct-zone{border-color:var(--accent3);background:rgba(16,185,129,.08);}
+.dd-zone.wrong-zone{border-color:var(--danger);background:rgba(239,68,68,.08);}
+.dd-zone-label{font-size:.8rem;font-weight:700;color:var(--text2);}
+.dd-zone-drop{font-family:'Orbitron',monospace;font-size:.78rem;color:var(--text2);min-width:140px;text-align:right;}
+
+/* CALC GAME */
+.calc-container{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:16px;}
+.calc-given{margin-bottom:12px;}
+.calc-given .cg-label{font-size:.72rem;color:var(--text2);font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px;}
+.calc-given .cg-val{font-family:'Orbitron',monospace;font-size:1rem;color:var(--accent);font-weight:700;}
+.calc-fields{display:flex;flex-direction:column;gap:10px;}
+.calc-field label{display:block;font-size:.76rem;font-weight:700;color:var(--text2);margin-bottom:4px;}
+.calc-field input{width:100%;background:var(--card2);border:2px solid var(--border);border-radius:10px;padding:9px 12px;color:var(--text);font-family:'Orbitron',monospace;font-size:.85rem;font-weight:700;outline:none;transition:border-color .2s;}
+.calc-field input:focus{border-color:var(--accent);}
+.calc-field input.correct-input{border-color:var(--accent3);background:rgba(16,185,129,.08);}
+.calc-field input.wrong-input{border-color:var(--danger);background:rgba(239,68,68,.08);}
+.btn-check{width:100%;margin-top:12px;background:linear-gradient(135deg,var(--accent4),#f97316);border:none;color:#fff;border-radius:12px;padding:12px;font-family:'Nunito',sans-serif;font-size:.95rem;font-weight:800;cursor:pointer;transition:all .2s;}
+.btn-check:hover{transform:translateY(-1px);}
+.btn-check:disabled{opacity:.5;cursor:not-allowed;}
+
+/* FEEDBACK */
+.feedback-box{margin-top:14px;border-radius:12px;padding:13px;font-size:.82rem;line-height:1.65;display:none;}
+.feedback-box.show{display:block;}
+.feedback-box.fb-correct{background:rgba(16,185,129,.1);border:1px solid rgba(16,185,129,.3);color:var(--accent3);}
+.feedback-box.fb-wrong{background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.3);color:#fca5a5;}
+.feedback-box strong{display:block;margin-bottom:4px;font-size:.88rem;}
+
+/* COMBO BURST */
+.combo-burst{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);font-family:'Orbitron',monospace;font-size:1.8rem;font-weight:900;color:var(--accent4);pointer-events:none;opacity:0;z-index:999;text-shadow:0 0 20px rgba(245,158,11,.8);}
+@keyframes combo-anim{0%{opacity:1;transform:translate(-50%,-60%) scale(1.4)}100%{opacity:0;transform:translate(-50%,-120%) scale(.8)}}
+.combo-burst.fire{animation:combo-anim .8s ease-out forwards;}
+
+.next-btn-wrap{padding:14px 18px;border-top:1px solid var(--border);}
+.btn-next{width:100%;background:linear-gradient(135deg,var(--accent),var(--accent2));border:none;border-radius:12px;padding:13px;color:#fff;font-family:'Nunito',sans-serif;font-size:.95rem;font-weight:800;cursor:pointer;display:none;transition:all .2s;box-shadow:0 3px 15px rgba(0,212,255,.3);}
+.btn-next.show{display:block;}
+.btn-next:hover{transform:translateY(-1px);}
+
+/* RESULT */
+#screen-result{padding:28px 20px;align-items:center;text-align:center;justify-content:center;}
+.result-emoji{font-size:3.8rem;margin-bottom:8px;animation:bounce-in .5s ease;}
+@keyframes bounce-in{0%{transform:scale(0)}70%{transform:scale(1.2)}100%{transform:scale(1)}}
+.result-title{font-family:'Orbitron',monospace;font-size:1.3rem;font-weight:900;margin-bottom:4px;}
+.result-sub{font-size:.85rem;color:var(--text2);margin-bottom:20px;}
+.result-score-big{font-family:'Orbitron',monospace;font-size:3.2rem;font-weight:900;background:linear-gradient(135deg,var(--accent4),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:4px;}
+.result-score-label{font-size:.78rem;color:var(--text2);margin-bottom:16px;}
+.result-stars{font-size:1.8rem;margin-bottom:20px;letter-spacing:4px;}
+.result-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;width:100%;max-width:340px;margin-bottom:18px;}
+.rs-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:11px 8px;}
+.rs-card .rs-val{font-family:'Orbitron',monospace;font-size:1rem;font-weight:700;color:var(--accent4);}
+.rs-card .rs-label{font-size:.68rem;color:var(--text2);margin-top:2px;}
+.result-msg{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:13px 15px;font-size:.82rem;color:var(--text2);line-height:1.65;max-width:340px;margin-bottom:20px;text-align:left;}
+.result-msg strong{color:var(--text);}
+.result-btns{display:flex;flex-direction:column;gap:10px;width:100%;max-width:300px;}
+
+/* LEADERBOARD */
+#screen-leaderboard{padding:0;}
+.lb-wrap{padding:18px;flex:1;}
+.lb-title{font-family:'Orbitron',monospace;font-size:1.1rem;font-weight:900;color:var(--accent4);margin-bottom:4px;}
+.lb-sub{font-size:.82rem;color:var(--text2);margin-bottom:18px;}
+.lb-table{width:100%;border-collapse:collapse;}
+.lb-table th{background:rgba(245,158,11,.1);padding:9px 10px;text-align:left;font-size:.75rem;font-weight:800;color:var(--accent4);border-bottom:1px solid var(--border);}
+.lb-table td{padding:9px 10px;border-bottom:1px solid rgba(42,58,92,.5);font-size:.83rem;vertical-align:middle;}
+.lb-rank{font-family:'Orbitron',monospace;font-size:.8rem;font-weight:700;color:var(--text2);}
+.lb-rank.top1{color:#ffd700;}
+.lb-rank.top2{color:#c0c0c0;}
+.lb-rank.top3{color:#cd7f32;}
+.lb-name{font-weight:700;}
+.lb-score{font-family:'Orbitron',monospace;font-size:.85rem;color:var(--accent4);font-weight:700;}
+.lb-stars{font-size:.8rem;}
+.lb-detail{font-size:.7rem;color:var(--text2);}
+.lb-empty{text-align:center;padding:30px;color:var(--text2);font-size:.85rem;}
+.lb-actions{display:flex;gap:10px;margin-top:16px;}
+.lb-clear{background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.3);color:#fca5a5;border-radius:10px;padding:10px 16px;font-family:'Nunito',sans-serif;font-size:.82rem;font-weight:700;cursor:pointer;}
+
+/* FINAL */
+#screen-final{padding:28px 20px;align-items:center;text-align:center;justify-content:center;}
+.trophy{font-size:4.5rem;margin-bottom:8px;animation:spin-trophy .8s ease;}
+@keyframes spin-trophy{0%{transform:rotate(-20deg) scale(0)}100%{transform:rotate(0) scale(1)}}
+.final-title{font-family:'Orbitron',monospace;font-size:1.4rem;font-weight:900;color:var(--accent4);margin-bottom:6px;}
+.final-sub{font-size:.85rem;color:var(--text2);margin-bottom:20px;}
+.total-score-box{background:linear-gradient(135deg,rgba(245,158,11,.15),rgba(0,212,255,.1));border:2px solid rgba(245,158,11,.4);border-radius:20px;padding:22px;width:100%;max-width:340px;margin-bottom:20px;}
+.ts-label{font-size:.75rem;color:var(--text2);margin-bottom:4px;text-transform:uppercase;letter-spacing:1px;}
+.ts-val{font-family:'Orbitron',monospace;font-size:2.8rem;font-weight:900;color:var(--accent4);}
+.ts-max{font-size:.82rem;color:var(--text2);}
+.ts-stars{font-size:1.6rem;margin-top:8px;}
+.final-breakdown{width:100%;max-width:340px;background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden;margin-bottom:18px;}
+.fb-row{display:flex;justify-content:space-between;align-items:center;padding:11px 15px;border-bottom:1px solid var(--border);font-size:.82rem;}
+.fb-row:last-child{border-bottom:none;}
+.fb-row .fb-name{font-weight:700;}
+.fb-row .fb-score{font-family:'Orbitron',monospace;color:var(--accent4);font-weight:700;font-size:.8rem;}
+.grade-box{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px;width:100%;max-width:340px;margin-bottom:20px;}
+.grade-title{font-size:.72rem;color:var(--text2);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;font-weight:700;}
+.grade-row{display:flex;justify-content:space-between;font-size:.8rem;margin-bottom:5px;color:var(--text2);padding:4px 6px;border-radius:6px;}
+.grade-row.active{color:var(--accent4);font-weight:800;background:rgba(245,158,11,.1);}
+.final-btns{display:flex;flex-direction:column;gap:10px;width:100%;max-width:300px;}
+</style>
+</head>
+<body>
+
+<div class="combo-burst" id="combo-burst">🔥 COMBO!</div>
+
+<!-- ===== HOME ===== -->
+<div id="screen-home" class="screen active">
+  <div style="align-items:center;display:flex;flex-direction:column;padding:30px 20px;text-align:center;flex:1;justify-content:center;">
+    <div class="hero-badge">🎮 Game-Based Learning · PTIK</div>
+    <div class="hero-title">SubNet<br>Quest</div>
+    <div class="hero-sub">Media Pembelajaran Interaktif</div>
+    <div class="hero-desc">Kuasai <strong>Subnetting</strong> lewat materi visual + game seru 3 level! Drag & Drop, hitung subnet, dan raih skor tertinggi di kelas.</div>
+    <div class="info-grid">
+      <div class="info-card"><div class="ic-icon">🎮</div><div class="ic-val">3</div><div class="ic-label">Level</div></div>
+      <div class="info-card"><div class="ic-icon">❓</div><div class="ic-val">15</div><div class="ic-label">Soal</div></div>
+      <div class="info-card"><div class="ic-icon">⭐</div><div class="ic-val">600</div><div class="ic-label">Max Poin</div></div>
+    </div>
+    <div class="name-box">
+      <label>👤 Nama Kamu</label>
+      <input type="text" id="student-name" placeholder="Masukkan nama lengkap..." maxlength="40">
+    </div>
+    <button class="btn-primary" onclick="startApp()">🚀 Mulai Belajar</button>
+    <div class="school-tag" style="margin-top:16px;">SMK Negeri 7 Sarolangun · Kelas XI KK</div>
+    <button onclick="goTo('screen-leaderboard')" style="margin-top:10px;background:transparent;border:1px solid var(--border);color:var(--text2);border-radius:10px;padding:8px 18px;font-family:'Nunito',sans-serif;font-size:.8rem;cursor:pointer;">🏆 Lihat Leaderboard Kelas</button>
+  </div>
+</div>
+
+<!-- ===== MATERI ===== -->
+<div id="screen-materi" class="screen">
+  <div class="top-bar">
+    <div class="logo">Sub<span>Net</span> Quest</div>
+    <div style="font-size:.78rem;color:var(--text2);">📚 Materi</div>
+  </div>
+  <div class="tab-bar">
+    <button class="tab-btn active" onclick="switchTab(0)">① IP Address</button>
+    <button class="tab-btn" onclick="switchTab(1)">② Subnet Mask</button>
+    <button class="tab-btn" onclick="switchTab(2)">③ Perhitungan</button>
+    <button class="tab-btn" onclick="switchTab(3)">④ Contoh</button>
+    <button class="tab-btn" onclick="switchTab(4)">▶ Video Demo</button>
+  </div>
+  <div class="materi-content">
+
+    <!-- TAB 0: IP ADDRESS -->
+    <div class="tab-content active" id="tab-0">
+      <div class="section-badge">📡 Tab 1 dari 4</div>
+      <div class="materi-title">IP Address & Struktur Dasar</div>
+      <div class="materi-sub">IP Address adalah alamat unik setiap perangkat dalam jaringan — seperti alamat rumah, tapi untuk komputer dan router.</div>
+      <div class="concept-card">
+        <h3>🔢 Struktur IPv4</h3>
+        <p>IPv4 terdiri dari <strong style="color:var(--accent)">32 bit</strong> yang dibagi menjadi 4 kelompok (oktet), masing-masing 8 bit.</p>
+        <div class="ip-visual">
+          <div class="ip-octet"><div class="oct-val">192</div><div class="oct-bit">11000000</div><div class="oct-label">Oktet 1</div></div>
+          <div class="ip-octet"><div class="oct-val">168</div><div class="oct-bit">10101000</div><div class="oct-label">Oktet 2</div></div>
+          <div class="ip-octet"><div class="oct-val">1</div><div class="oct-bit">00000001</div><div class="oct-label">Oktet 3</div></div>
+          <div class="ip-octet"><div class="oct-val">0</div><div class="oct-bit">00000000</div><div class="oct-label">Oktet 4</div></div>
+        </div>
+        <p style="margin-top:8px;">Nilai setiap oktet: <strong style="color:var(--accent)">0 sampai 255</strong> (karena 8 bit = 2⁸ = 256 kemungkinan nilai).</p>
+      </div>
+      <div class="concept-card">
+        <h3>🏷️ Kelas IP Address</h3>
+        <p>IPv4 dibagi menjadi kelas berdasarkan nilai oktet pertama:</p>
+        <table class="ip-table">
+          <tr><th>Kelas</th><th>Range Oktet 1</th><th>Default Mask</th><th>Penggunaan</th></tr>
+          <tr><td><strong style="color:var(--accent3)">A</strong></td><td>1 – 126</td><td>/8</td><td>Jaringan sangat besar</td></tr>
+          <tr><td><strong style="color:var(--accent)">B</strong></td><td>128 – 191</td><td>/16</td><td>Jaringan menengah</td></tr>
+          <tr><td><strong style="color:var(--accent2)">C</strong></td><td>192 – 223</td><td>/24</td><td>Jaringan kecil (LAN)</td></tr>
+          <tr><td><strong style="color:var(--accent4)">D</strong></td><td>224 – 239</td><td>—</td><td>Multicast</td></tr>
+        </table>
+      </div>
+      <div class="tip-box">💡 <strong>Di Cisco Packet Tracer:</strong> Kamu akan sering bekerja dengan IP Kelas C seperti <code style="color:var(--accent)">192.168.x.x</code> karena itu yang paling umum digunakan di jaringan LAN sekolah dan kantor.</div>
+      <div class="concept-card">
+        <h3>🔒 IP Privat vs Publik</h3>
+        <p>Tidak semua IP bisa diakses dari internet. Ada IP khusus untuk jaringan internal (privat):</p>
+        <div class="formula">
+          Kelas A: 10.0.0.0 – 10.255.255.255<br>
+          Kelas B: 172.16.0.0 – 172.31.255.255<br>
+          Kelas C: 192.168.0.0 – 192.168.255.255
+        </div>
+        <p style="margin-top:8px;">IP ini bebas digunakan di jaringan lokal dan tidak bisa diakses langsung dari internet.</p>
+      </div>
+    </div>
+
+    <!-- TAB 1: SUBNET MASK -->
+    <div class="tab-content" id="tab-1">
+      <div class="section-badge">🎭 Tab 2 dari 4</div>
+      <div class="materi-title">Subnet Mask & CIDR</div>
+      <div class="materi-sub">Subnet mask adalah "penanda" yang memisahkan bagian Network ID dan Host ID dalam sebuah IP Address.</div>
+      <div class="concept-card">
+        <h3>✂️ Network ID vs Host ID</h3>
+        <p>Bayangkan IP seperti alamat surat: <strong style="color:var(--accent)">Nama Jalan</strong> = Network ID, <strong style="color:var(--accent2)">Nomor Rumah</strong> = Host ID.</p>
+        <div class="formula">
+          IP:   192.168.1.  50<br>
+          Mask: 255.255.255. 0<br>
+          ─────────────────────<br>
+          Net:  192.168.1. [Network]<br>
+          Host: ─────────────  50 [Host]
+        </div>
+      </div>
+      <div class="concept-card">
+        <h3>📏 Notasi CIDR</h3>
+        <p>CIDR (Classless Inter-Domain Routing) adalah cara ringkas menulis subnet mask menggunakan angka setelah tanda "/".</p>
+        <table class="ip-table">
+          <tr><th>CIDR</th><th>Subnet Mask</th><th>Bit Host</th><th>Max Host</th></tr>
+          <tr><td>/24</td><td>255.255.255.0</td><td>8</td><td>254</td></tr>
+          <tr><td>/25</td><td>255.255.255.128</td><td>7</td><td>126</td></tr>
+          <tr><td>/26</td><td>255.255.255.192</td><td>6</td><td>62</td></tr>
+          <tr><td>/27</td><td>255.255.255.224</td><td>5</td><td>30</td></tr>
+          <tr><td>/28</td><td>255.255.255.240</td><td>4</td><td>14</td></tr>
+          <tr><td>/29</td><td>255.255.255.248</td><td>3</td><td>6</td></tr>
+          <tr><td>/30</td><td>255.255.255.252</td><td>2</td><td>2</td></tr>
+        </table>
+      </div>
+      <div class="warn-box">⚠️ <strong>Ingat!</strong> Angka di CIDR (/24, /26, dst) menunjukkan jumlah bit yang "dipakai" untuk Network. Sisanya digunakan untuk Host. Jadi /24 = 24 bit network, 8 bit host.</div>
+      <div class="concept-card">
+        <h3>🏠 3 Alamat Penting Setiap Subnet</h3>
+        <table class="ip-table">
+          <tr><th>Alamat</th><th>Posisi</th><th>Keterangan</th></tr>
+          <tr><td><strong style="color:var(--accent3)">Network</strong></td><td>Pertama</td><td>Identitas jaringan, tidak bisa dipakai host</td></tr>
+          <tr><td><strong style="color:var(--accent)">Host Range</strong></td><td>Tengah</td><td>Alamat yang bisa dipakai perangkat</td></tr>
+          <tr><td><strong style="color:var(--danger)">Broadcast</strong></td><td>Terakhir</td><td>Kirim ke semua host, tidak bisa dipakai host</td></tr>
+        </table>
+        <div class="formula">
+          Contoh /24:<br>
+          Network  : 192.168.1.0<br>
+          Host 1   : 192.168.1.1<br>
+          Host last: 192.168.1.254<br>
+          Broadcast: 192.168.1.255
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 2: PERHITUNGAN -->
+    <div class="tab-content" id="tab-2">
+      <div class="section-badge">🔢 Tab 3 dari 4</div>
+      <div class="materi-title">Rumus & Cara Hitung</div>
+      <div class="materi-sub">Ini adalah inti dari subnetting — memahami rumus ini akan memudahkan kamu menjawab soal dan konfigurasi di Packet Tracer.</div>
+      <div class="concept-card">
+        <h3>📐 Rumus Utama</h3>
+        <div class="formula">
+          Bit Host (n) = 32 − CIDR<br><br>
+          Jumlah Host  = 2ⁿ − 2<br>
+          Jumlah Subnet = 2ˢ (s = bit dipinjam)<br>
+          Block Size   = 256 − nilai oktet mask
+        </div>
+        <p style="margin-top:10px;">Kenapa dikurang 2? Karena 1 untuk <strong style="color:var(--accent3)">Network Address</strong> dan 1 untuk <strong style="color:var(--danger)">Broadcast Address</strong>.</p>
+      </div>
+      <div class="concept-card">
+        <h3>🧮 Langkah Menghitung Subnet</h3>
+        <p>Contoh: Diketahui IP <strong style="color:var(--accent)">192.168.1.0/26</strong></p>
+        <div class="formula">
+          Langkah 1: Bit host = 32 − 26 = 6<br>
+          Langkah 2: Jumlah host = 2⁶ − 2 = 62<br>
+          Langkah 3: Block size = 256 − 192 = 64<br>
+          Langkah 4: Subnet = .0, .64, .128, .192<br><br>
+          Subnet 1: 192.168.1.0 − 192.168.1.63<br>
+          → Network : 192.168.1.0<br>
+          → Host 1  : 192.168.1.1<br>
+          → Host End: 192.168.1.62<br>
+          → Broadcast: 192.168.1.63
+        </div>
+      </div>
+      <div class="concept-card">
+        <h3>⚡ Trik Cepat Block Size</h3>
+        <p>Block size = jarak antar subnet. Cara cepat: <strong style="color:var(--accent)">256 − nilai oktet terakhir subnet mask.</strong></p>
+        <table class="ip-table">
+          <tr><th>CIDR</th><th>Oktet Terakhir Mask</th><th>Block Size</th></tr>
+          <tr><td>/25</td><td>128</td><td>256−128 = 128</td></tr>
+          <tr><td>/26</td><td>192</td><td>256−192 = 64</td></tr>
+          <tr><td>/27</td><td>224</td><td>256−224 = 32</td></tr>
+          <tr><td>/28</td><td>240</td><td>256−240 = 16</td></tr>
+          <tr><td>/29</td><td>248</td><td>256−248 = 8</td></tr>
+          <tr><td>/30</td><td>252</td><td>256−252 = 4</td></tr>
+        </table>
+      </div>
+      <div class="tip-box">💡 <strong>Tips saat ujian/game:</strong> Hafal block size! Dari situ kamu langsung bisa hitung Network Address, Broadcast, dan Host Range tanpa perlu konversi biner.</div>
+    </div>
+
+    <!-- TAB 3: CONTOH -->
+    <div class="tab-content" id="tab-3">
+      <div class="section-badge">📝 Tab 4 dari 4</div>
+      <div class="materi-title">Contoh Kasus Lengkap</div>
+      <div class="materi-sub">Pelajari contoh berikut sebelum masuk ke game. Pastikan kamu paham alur perhitungannya!</div>
+      <div class="concept-card">
+        <h3>📌 Kasus 1: /27</h3>
+        <p>Diketahui: <strong style="color:var(--accent)">192.168.10.0/27</strong> — Tentukan semua subnet!</p>
+        <div class="formula">
+          Bit host = 32−27 = 5<br>
+          Host/subnet = 2⁵−2 = 30<br>
+          Block size = 256−224 = 32<br><br>
+          Subnet 1: .0   → .31  (Host: .1–.30)<br>
+          Subnet 2: .32  → .63  (Host: .33–.62)<br>
+          Subnet 3: .64  → .95  (Host: .65–.94)<br>
+          Subnet 4: .96  → .127 (Host: .97–.126)<br>
+          ... dst (total 8 subnet)
+        </div>
+      </div>
+      <div class="concept-card">
+        <h3>📌 Kasus 2: Konfigurasi di Packet Tracer</h3>
+        <p>Skenario: Kamu perlu menghubungkan 50 PC dalam 1 jaringan. CIDR yang cocok?</p>
+        <div class="formula">
+          Butuh min 50 host<br>
+          /26 → 62 host ✓ (cukup!)<br>
+          /27 → 30 host ✗ (kurang)<br><br>
+          Pilih /26 → 255.255.255.192<br>
+          Config di Packet Tracer:<br>
+          IP: 192.168.1.1<br>
+          SM: 255.255.255.192
+        </div>
+      </div>
+      <div class="tip-box">💡 <strong>Siap masuk game?</strong> Kamu akan menghadapi 3 level dengan tipe soal berbeda: pilihan ganda cepat, drag & drop, dan kalkulator subnet interaktif. Gunakan rumus yang sudah dipelajari!</div>
+    </div>
+
+    <!-- TAB 4: VIDEO DEMO -->
+    <div class="tab-content" id="tab-4">
+      <div class="section-badge">▶ Video Demo</div>
+      <div class="materi-title">Video Demo Cisco Packet Tracer</div>
+      <div class="materi-sub">Tonton video demonstrasi desain subnetting IP Kelas C di Cisco Packet Tracer sebelum mulai game. Pastikan kamu paham alurnya!</div>
+
+      <!-- VIDEO LINK CARD -->
+      <div style="background:var(--card);border:1px solid var(--border);border-radius:16px;overflow:hidden;margin-bottom:16px;">
+        <!-- Thumbnail area -->
+        <div style="background:linear-gradient(135deg,rgba(0,212,255,.08),rgba(124,58,237,.08));padding:32px 20px;text-align:center;border-bottom:1px solid var(--border);">
+          <div style="font-size:3.5rem;margin-bottom:10px;">▶️</div>
+          <div style="font-size:1rem;font-weight:800;margin-bottom:6px;">Desain Subnetting IP Kelas C</div>
+          <div style="font-size:.82rem;color:var(--text2);margin-bottom:4px;">Cisco Packet Tracer — Demo Langkah per Langkah</div>
+          <div style="font-size:.75rem;color:var(--accent);font-family:'Orbitron',monospace;">youtube.com</div>
+        </div>
+        <!-- Button -->
+        <div style="padding:16px;">
+          <a href="https://www.youtube.com/watch?v=VbnuzNWDcHc" target="_blank" rel="noopener"
+            style="display:flex;align-items:center;justify-content:center;gap:10px;width:100%;background:linear-gradient(135deg,#ff0000,#cc0000);color:#fff;text-decoration:none;border-radius:12px;padding:14px;font-family:'Nunito',sans-serif;font-size:.95rem;font-weight:800;box-shadow:0 4px 16px rgba(255,0,0,.3);transition:all .2s;">
+            <span style="font-size:1.2rem;">▶</span> Tonton di YouTube
+          </a>
+          <div style="font-size:.75rem;color:var(--text2);text-align:center;margin-top:8px;">Klik untuk membuka video di tab baru</div>
+        </div>
+      </div>
+
+      <div class="concept-card">
+        <h3>📌 Apa yang Perlu Diperhatikan?</h3>
+        <p>Saat menonton, fokus pada 3 hal ini:</p>
+        <div class="formula">
+          1. Cara memasukkan IP Address di setiap perangkat<br>
+          2. Cara mengisi Subnet Mask yang sesuai<br>
+          3. Cara melakukan ping untuk tes koneksi antar PC
+        </div>
+        <p style="margin-top:8px;">Ketiga hal ini langsung berkaitan dengan soal di <strong style="color:var(--accent)">Level 3 — Kalkulator Subnet!</strong></p>
+      </div>
+
+      <div class="tip-box">
+        💡 <strong>Tips:</strong> Setelah menonton, kembali ke sini dan klik <strong>"Main Game 🎮"</strong> untuk mulai mengerjakan soal. Gunakan rumus yang sudah dipelajari di Tab ③ Perhitungan!
+      </div>
+    </div>
+
+  </div>
+  <div class="progress-nav">
+    <button class="btn-sec" onclick="goTo('screen-home')" style="flex:1;">← Kembali</button>
+    <button class="btn-go" onclick="goTo('screen-levels')" style="flex:2;">Main Game 🎮</button>
+  </div>
+</div>
+
+<!-- ===== LEVELS ===== -->
+<div id="screen-levels" class="screen">
+  <div class="top-bar">
+    <div class="logo">Sub<span>Net</span> Quest</div>
+    <div style="display:flex;align-items:center;gap:6px;font-family:'Orbitron',monospace;font-size:.82rem;color:var(--accent4);">⭐ <span id="total-score-display">0</span></div>
+  </div>
+  <div class="levels-wrap">
+    <div class="section-badge">🎮 Pilih Level</div>
+    <div style="font-size:1.2rem;font-weight:900;margin-bottom:4px;">Arena Subnetting</div>
+    <div style="font-size:.83rem;color:var(--text2);margin-bottom:20px;">Selesaikan setiap level untuk membuka level berikutnya. Raih bintang sebanyak mungkin!</div>
+    <div class="level-cards">
+      <div class="level-card lv1" id="lc-1" onclick="startLevel(1)">
+        <div class="lc-num">01</div>
+        <div class="lc-info">
+          <h3>Dasar IP & Kelas</h3>
+          <p>Identifikasi kelas IP, subnet mask, dan CIDR</p>
+          <div class="lc-type">🎯 Pilihan Ganda + Timer</div>
+          <div class="lc-stars" id="stars-1">☆☆☆</div>
+        </div>
+        <div class="lc-meta"><div class="pts">+200</div><div class="qs">5 soal</div></div>
+      </div>
+      <div class="level-card lv2 locked" id="lc-2" onclick="startLevel(2)">
+        <div class="lc-num">02</div>
+        <div class="lc-info">
+          <h3>Network & Broadcast</h3>
+          <p>Drag & drop komponen subnet ke posisi yang benar</p>
+          <div class="lc-type">🖱️ Drag & Drop</div>
+          <div class="lc-stars" id="stars-2">☆☆☆</div>
+        </div>
+        <div class="lc-meta"><div class="pts">+200</div><div class="qs">5 soal</div></div>
+      </div>
+      <div class="level-card lv3 locked" id="lc-3" onclick="startLevel(3)">
+        <div class="lc-num">03</div>
+        <div class="lc-info">
+          <h3>Kalkulator Subnet</h3>
+          <p>Hitung dan isi jawaban subnet secara manual</p>
+          <div class="lc-type">🧮 Input Manual</div>
+          <div class="lc-stars" id="stars-3">☆☆☆</div>
+        </div>
+        <div class="lc-meta"><div class="pts">+200</div><div class="qs">5 soal</div></div>
+      </div>
+    </div>
+    <div style="margin-top:16px;display:flex;gap:10px;">
+      <button class="btn-sec" style="flex:1;" onclick="goTo('screen-materi')">📚 Materi</button>
+      <button class="btn-sec" style="flex:1;" onclick="goTo('screen-leaderboard')">🏆 Leaderboard</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== GAME ===== -->
+<div id="screen-game" class="screen">
+  <div class="top-bar">
+    <div class="logo">Sub<span>Net</span> Quest</div>
+    <div class="game-hud">
+      <div class="hud-item hud-timer">⏱ <span id="timer-val">15</span>s</div>
+      <div class="hud-item hud-combo" id="combo-display" style="display:none">🔥 x<span id="combo-val">0</span></div>
+      <div class="hud-item hud-score">⭐ <span id="live-score">0</span></div>
+    </div>
+  </div>
+  <div class="game-header">
+    <div class="game-meta">
+      <div class="game-level-tag" id="game-level-tag">Level 1</div>
+      <div style="font-size:.75rem;color:var(--text2);">Soal <span id="q-num">1</span>/5</div>
+    </div>
+    <div class="pb-wrap"><div class="pb-fill" id="q-progress" style="width:0%"></div></div>
+  </div>
+  <div class="game-body">
+    <div class="q-num-tag" id="q-label"></div>
+    <div class="q-type-tag" id="q-type-tag"></div>
+    <div class="q-text" id="q-text"></div>
+    <div class="q-hint" id="q-hint"></div>
+    <div id="game-area"></div>
+    <div class="feedback-box" id="feedback-box"></div>
+  </div>
+  <div class="next-btn-wrap">
+    <button class="btn-next" id="btn-next" onclick="nextQuestion()">Soal Berikutnya →</button>
+  </div>
+</div>
+
+<!-- ===== RESULT ===== -->
+<div id="screen-result" class="screen">
+  <div class="result-emoji" id="result-emoji">🎉</div>
+  <div class="result-title" id="result-title">Level Selesai!</div>
+  <div class="result-sub" id="result-sub"></div>
+  <div class="result-score-big" id="result-score">0</div>
+  <div class="result-score-label">Poin Didapat</div>
+  <div class="result-stars" id="result-stars">☆☆☆</div>
+  <div class="result-stats">
+    <div class="rs-card"><div class="rs-val" id="rs-correct">0</div><div class="rs-label">✅ Benar</div></div>
+    <div class="rs-card"><div class="rs-val" id="rs-wrong">0</div><div class="rs-label">❌ Salah</div></div>
+    <div class="rs-card"><div class="rs-val" id="rs-acc">0%</div><div class="rs-label">🎯 Akurasi</div></div>
+  </div>
+  <div class="result-msg" id="result-msg"></div>
+  <div class="result-btns">
+    <button class="btn-primary" id="btn-next-level" onclick="nextLevelOrFinish()">Lanjut →</button>
+    <button class="btn-sec" onclick="goTo('screen-levels')">Kembali ke Level</button>
+  </div>
+</div>
+
+<!-- ===== LEADERBOARD ===== -->
+<div id="screen-leaderboard" class="screen">
+  <div class="top-bar">
+    <div class="logo">Sub<span>Net</span> Quest</div>
+    <div style="font-size:.78rem;color:var(--accent4);">🏆 Leaderboard</div>
+  </div>
+  <div class="lb-wrap">
+    <div class="lb-title">🏆 Leaderboard Kelas</div>
+    <div class="lb-sub">Data nilai siswa selama sesi ini. Guru dapat melihat siapa yang perlu bimbingan lebih.</div>
+    <div id="lb-content"></div>
+    <div class="lb-actions">
+      <button class="btn-go" style="flex:2;" onclick="goTo('screen-home')">← Kembali</button>
+      <button class="lb-clear" onclick="clearLeaderboard()">🗑 Reset Data</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== FINAL ===== -->
+<div id="screen-final" class="screen">
+  <div class="trophy">🏆</div>
+  <div class="final-title">QUEST COMPLETE!</div>
+  <div class="final-sub">Kamu telah menyelesaikan semua level SubNet Quest!</div>
+  <div class="total-score-box">
+    <div class="ts-label">Total Poin Akhir</div>
+    <div class="ts-val" id="final-total">0</div>
+    <div class="ts-max">dari 600 poin</div>
+    <div class="ts-stars" id="final-stars">☆☆☆</div>
+  </div>
+  <div class="final-breakdown" id="final-breakdown"></div>
+  <div class="grade-box">
+    <div class="grade-title">📊 Keterangan Nilai</div>
+    <div class="grade-row" id="gr-a">🌟 Sangat Baik: 540–600 poin</div>
+    <div class="grade-row" id="gr-b">👍 Baik: 420–539 poin</div>
+    <div class="grade-row" id="gr-c">📚 Cukup: 300–419 poin</div>
+    <div class="grade-row" id="gr-d">🔄 Perlu Belajar Lagi: &lt; 300 poin</div>
+  </div>
+  <div class="final-btns">
+    <button class="btn-primary" onclick="goTo('screen-leaderboard')">🏆 Lihat Leaderboard</button>
+    <button class="btn-sec" onclick="restartAll()">🔄 Main Lagi</button>
+    <button class="btn-sec" onclick="goTo('screen-materi')">📚 Baca Materi Lagi</button>
+  </div>
+</div>
+
+<script>
+// ===== SOAL =====
+const LEVELS = {
+  1: {
+    name:"Dasar IP & Kelas", tag:"Level 1 — Pilihan Ganda + Timer",
+    type:"mcq", timerSec:15,
+    questions:[
+      {text:"IP Address 192.168.1.1 termasuk kelas berapa?",hint:"192.168.1.1 — lihat oktet pertama!",options:["Kelas A","Kelas B","Kelas C","Kelas D"],answer:2,explain:"Oktet pertama 192 masuk range 192–223 → Kelas C. Kelas A: 1–126, B: 128–191, C: 192–223."},
+      {text:"Berapa jumlah bit dalam sebuah IPv4 Address?",hint:"IPv4 = ? × 8 bit",options:["16 bit","32 bit","64 bit","128 bit"],answer:1,explain:"IPv4 = 4 oktet × 8 bit = 32 bit total. IPv6 barulah 128 bit."},
+      {text:"Subnet mask 255.255.255.0 dalam notasi CIDR adalah?",hint:"255.255.255.0 — hitung bit bernilai 1",options:["/16","/24","/25","/30"],answer:1,explain:"255.255.255.0 = 11111111.11111111.11111111.00000000 → ada 24 bit bernilai 1 → /24."},
+      {text:"IP 10.0.0.1 termasuk kelas berapa?",hint:"10.0.0.1 — oktet pertama adalah 10",options:["Kelas A","Kelas B","Kelas C","Kelas D"],answer:0,explain:"Oktet pertama 10 masuk range 1–126 → Kelas A. IP ini juga termasuk IP privat Kelas A."},
+      {text:"Berapa nilai block size untuk subnet /26?",hint:"/26 → mask oktet terakhir = 192",options:["32","64","128","256"],answer:1,explain:"Block size = 256 − 192 = 64. Subnet /26: .0, .64, .128, .192 — jarak antar subnet = 64."}
+    ]
+  },
+  2: {
+    name:"Network & Broadcast", tag:"Level 2 — Drag & Drop",
+    type:"dragdrop", timerSec:0,
+    questions:[
+      {text:"Drag setiap alamat ke kategori yang benar untuk jaringan 192.168.1.0/24",hint:"192.168.1.0/24 — /24 artinya 3 oktet pertama = network",chips:["192.168.1.0","192.168.1.1","192.168.1.254","192.168.1.255"],zones:["Network Address","Host Pertama","Host Terakhir","Broadcast Address"],answers:["192.168.1.0","192.168.1.1","192.168.1.254","192.168.1.255"],explain:"Pada /24: Network=.0, Host range=.1–.254, Broadcast=.255. Network & Broadcast tidak bisa dipakai host."},
+      {text:"Drag setiap alamat ke kategori yang benar untuk jaringan 10.0.0.0/8",hint:"10.0.0.0/8 — /8 artinya hanya oktet pertama = network",chips:["10.0.0.0","10.0.0.1","10.255.255.254","10.255.255.255"],zones:["Network Address","Host Pertama","Host Terakhir","Broadcast Address"],answers:["10.0.0.0","10.0.0.1","10.255.255.254","10.255.255.255"],explain:"Pada /8: Network=10.0.0.0, Host 1=10.0.0.1, Host akhir=10.255.255.254, Broadcast=10.255.255.255."},
+      {text:"Drag setiap alamat ke kategori yang benar untuk 192.168.5.64/26",hint:"192.168.5.64/26 — block size /26 = 64",chips:["192.168.5.64","192.168.5.65","192.168.5.126","192.168.5.127"],zones:["Network Address","Host Pertama","Host Terakhir","Broadcast Address"],answers:["192.168.5.64","192.168.5.65","192.168.5.126","192.168.5.127"],explain:"/26 block=64. Subnet ke-2: .64–.127. Network=.64, Host 1=.65, Host end=.126, Broadcast=.127."},
+      {text:"Drag setiap alamat ke kategori yang benar untuk 172.16.0.0/25",hint:"172.16.0.0/25 — block size /25 = 128",chips:["172.16.0.0","172.16.0.1","172.16.0.126","172.16.0.127"],zones:["Network Address","Host Pertama","Host Terakhir","Broadcast Address"],answers:["172.16.0.0","172.16.0.1","172.16.0.126","172.16.0.127"],explain:"/25 block=128. Subnet 1: .0–.127. Network=.0, Host 1=.1, Host end=.126, Broadcast=.127."},
+      {text:"Drag setiap alamat ke kategori yang benar untuk 192.168.10.32/27",hint:"192.168.10.32/27 — block size /27 = 32",chips:["192.168.10.32","192.168.10.33","192.168.10.62","192.168.10.63"],zones:["Network Address","Host Pertama","Host Terakhir","Broadcast Address"],answers:["192.168.10.32","192.168.10.33","192.168.10.62","192.168.10.63"],explain:"/27 block=32. Subnet 2: .32–.63. Network=.32, Host 1=.33, Host end=.62, Broadcast=.63."}
+    ]
+  },
+  3: {
+    name:"Kalkulator Subnet", tag:"Level 3 — Input Manual",
+    type:"calc", timerSec:0,
+    questions:[
+      {text:"Hitung informasi subnet lengkap untuk IP berikut:",hint:"192.168.1.0/26",fields:["Bit Host (n)","Jumlah Host","Block Size","Broadcast Address"],answers:["6","62","64","192.168.1.63"],explain:"n=32−26=6 | Host=2⁶−2=62 | Block=256−192=64 | Broadcast=192.168.1.0+64−1=192.168.1.63"},
+      {text:"Hitung informasi subnet lengkap untuk IP berikut:",hint:"10.10.10.0/27",fields:["Bit Host (n)","Jumlah Host","Block Size","Broadcast Address"],answers:["5","30","32","10.10.10.31"],explain:"n=32−27=5 | Host=2⁵−2=30 | Block=256−224=32 | Broadcast=10.10.10.0+32−1=10.10.10.31"},
+      {text:"Hitung informasi subnet lengkap untuk IP berikut:",hint:"172.16.0.0/25",fields:["Bit Host (n)","Jumlah Host","Block Size","Broadcast Address"],answers:["7","126","128","172.16.0.127"],explain:"n=32−25=7 | Host=2⁷−2=126 | Block=256−128=128 | Broadcast=172.16.0.0+128−1=172.16.0.127"},
+      {text:"Hitung informasi subnet lengkap untuk IP berikut:",hint:"192.168.50.0/28",fields:["Bit Host (n)","Jumlah Host","Block Size","Broadcast Address"],answers:["4","14","16","192.168.50.15"],explain:"n=32−28=4 | Host=2⁴−2=14 | Block=256−240=16 | Broadcast=192.168.50.0+16−1=192.168.50.15"},
+      {text:"Hitung informasi subnet lengkap untuk IP berikut:",hint:"10.0.0.128/25",fields:["Bit Host (n)","Jumlah Host","Block Size","Broadcast Address"],answers:["7","126","128","10.0.0.255"],explain:"n=32−25=7 | Host=2⁷−2=126 | Block=128 | Broadcast=10.0.0.128+128−1=10.0.0.255"}
+    ]
+  }
+};
+
+// ===== STATE =====
+let studentName='';
+let currentLevel=1, currentQ=0;
+let levelScores={1:0,2:0,3:0};
+let levelCorrect={1:0,2:0,3:0};
+let levelStars={1:0,2:0,3:0};
+let levelWrongDetails={1:[],2:[],3:[]};
+let totalScore=0;
+let combo=0;
+let answered=false;
+let timerInterval=null;
+let timerLeft=0;
+let draggedChip=null;
+let zoneAnswers={};
+let leaderboard=[];
+
+function goTo(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0,0);
+  if(id==='screen-leaderboard') renderLeaderboard();
+}
+
+function startApp(){
+  const inp=document.getElementById('student-name').value.trim();
+  if(!inp){document.getElementById('student-name').focus();document.getElementById('student-name').style.borderColor='var(--danger)';return;}
+  studentName=inp;
+  document.getElementById('student-name').style.borderColor='var(--border)';
+  goTo('screen-materi');
+}
+
+// ===== YOUTUBE — video sudah di-embed permanen di tab Video Demo =====
+
+// update switchTab to support 5 tabs
+function switchTab(idx){
+  document.querySelectorAll('.tab-btn').forEach((b,i)=>b.classList.toggle('active',i===idx));
+  document.querySelectorAll('.tab-content').forEach((c,i)=>c.classList.toggle('active',i===idx));
+}
+
+
+function updateHUD(){
+  document.getElementById('total-score-display').textContent=totalScore;
+  document.getElementById('live-score').textContent=totalScore;
+}
+
+function unlockLevel(lvl){
+  const c=document.getElementById('lc-'+lvl);
+  if(c){c.classList.remove('locked');}
+}
+
+function markComplete(lvl,stars){
+  const c=document.getElementById('lc-'+lvl);
+  if(c){c.classList.add('completed');}
+  const se=document.getElementById('stars-'+lvl);
+  if(se){let s='';for(let i=0;i<3;i++)s+=i<stars?'⭐':'☆';se.textContent=s;}
+}
+
+function startLevel(lvl){
+  const c=document.getElementById('lc-'+lvl);
+  if(c&&c.classList.contains('locked'))return;
+  currentLevel=lvl; currentQ=0;
+  levelScores[lvl]=0; levelCorrect[lvl]=0; levelWrongDetails[lvl]=[];
+  combo=0; answered=false;
+  renderQuestion();
+  goTo('screen-game');
+}
+
+function renderQuestion(){
+  clearTimer();
+  answered=false;
+  const lvl=LEVELS[currentLevel];
+  const q=lvl.questions[currentQ];
+  const total=lvl.questions.length;
+
+  document.getElementById('game-level-tag').textContent=lvl.tag;
+  document.getElementById('q-num').textContent=currentQ+1;
+  document.getElementById('q-label').textContent=`Pertanyaan ${currentQ+1} dari ${total}`;
+  document.getElementById('q-text').textContent=q.text;
+  document.getElementById('q-hint').textContent=q.hint;
+  document.getElementById('q-progress').style.width=((currentQ/total)*100)+'%';
+
+  // type tag
+  const typeMap={mcq:'🎯 Pilihan Ganda',dragdrop:'🖱️ Drag & Drop',calc:'🧮 Hitung Manual'};
+  document.getElementById('q-type-tag').textContent=typeMap[lvl.type]||'';
+
+  document.getElementById('feedback-box').className='feedback-box';
+  document.getElementById('feedback-box').innerHTML='';
+  document.getElementById('btn-next').classList.remove('show');
+
+  const area=document.getElementById('game-area');
+  area.innerHTML='';
+
+  if(lvl.type==='mcq') renderMCQ(q, area, lvl);
+  else if(lvl.type==='dragdrop') renderDragDrop(q, area);
+  else if(lvl.type==='calc') renderCalc(q, area);
+
+  updateComboDisplay();
+  updateHUD();
+  window.scrollTo(0,0);
+}
+
+// ===== MCQ =====
+function renderMCQ(q, area, lvl){
+  const grid=document.createElement('div');
+  grid.className='options-grid';
+  const letters=['A','B','C','D'];
+  q.options.forEach((opt,i)=>{
+    const btn=document.createElement('button');
+    btn.className='opt-btn';
+    btn.innerHTML=`<span class="opt-letter">${letters[i]}</span>${opt}`;
+    btn.onclick=()=>selectMCQ(i, btn, q, lvl);
+    grid.appendChild(btn);
+  });
+  area.appendChild(grid);
+  if(lvl.timerSec>0) startTimer(lvl.timerSec, ()=>autoWrongMCQ(q));
+}
+
+function startTimer(sec, onEnd){
+  timerLeft=sec;
+  document.getElementById('timer-val').textContent=timerLeft;
+  document.getElementById('hud-timer')||null;
+  timerInterval=setInterval(()=>{
+    timerLeft--;
+    document.getElementById('timer-val').textContent=timerLeft;
+    if(timerLeft<=0){clearInterval(timerInterval);onEnd();}
+  },1000);
+}
+
+function clearTimer(){clearInterval(timerInterval);document.getElementById('timer-val').textContent='—';}
+
+function autoWrongMCQ(q){
+  if(answered)return;
+  answered=true;
+  combo=0; updateComboDisplay();
+  document.querySelectorAll('.opt-btn').forEach((b,i)=>{
+    b.disabled=true;
+    if(i===q.answer)b.classList.add('correct');
+  });
+  showFeedback(false,'⏰ Waktu Habis!',q.explain);
+  document.getElementById('btn-next').classList.add('show');
+  levelWrongDetails[currentLevel].push(currentQ+1);
+}
+
+function selectMCQ(idx, btn, q, lvl){
+  if(answered)return;
+  answered=true;
+  clearTimer();
+  document.querySelectorAll('.opt-btn').forEach(b=>b.disabled=true);
+  const correct=idx===q.answer;
+  if(correct){
+    btn.classList.add('correct');
+    combo++;
+    const bonus=combo>=3?40:(combo>=2?30:20);
+    levelScores[currentLevel]+=bonus;
+    levelCorrect[currentLevel]++;
+    totalScore+=bonus;
+    if(combo>=2)showComboBurst();
+    showFeedback(true,`✅ Benar! +${bonus} poin${combo>=2?' 🔥 COMBO x'+combo:''}`,q.explain);
+  } else {
+    btn.classList.add('wrong');
+    document.querySelectorAll('.opt-btn')[q.answer].classList.add('correct');
+    combo=0;
+    showFeedback(false,'❌ Kurang tepat.',q.explain);
+    levelWrongDetails[currentLevel].push(currentQ+1);
+  }
+  updateComboDisplay();
+  updateHUD();
+  document.getElementById('q-progress').style.width=(((currentQ+1)/lvl.questions.length)*100)+'%';
+  document.getElementById('btn-next').classList.add('show');
+  const isLast=currentQ===lvl.questions.length-1;
+  document.getElementById('btn-next').textContent=isLast?'Lihat Hasil →':'Soal Berikutnya →';
+}
+
+// ===== DRAG DROP =====
+function renderDragDrop(q, area){
+  zoneAnswers={};
+  q.zones.forEach(z=>zoneAnswers[z]=null);
+
+  // chips pool
+  const pool=document.createElement('div');
+  pool.className='dd-ip-list';
+  pool.id='chip-pool';
+  // shuffle chips
+  const shuffled=[...q.chips].sort(()=>Math.random()-.5);
+  shuffled.forEach(ip=>{
+    const chip=document.createElement('div');
+    chip.className='dd-chip';
+    chip.textContent=ip;
+    chip.draggable=true;
+    chip.dataset.ip=ip;
+    chip.ondragstart=e=>{draggedChip=ip;chip.style.opacity='.5';};
+    chip.ondragend=e=>{chip.style.opacity='1';};
+    // touch support
+    chip.addEventListener('touchstart',e=>{draggedChip=ip;},{ passive:true });
+    pool.appendChild(chip);
+  });
+
+  const zones=document.createElement('div');
+  zones.className='dd-zones';
+  q.zones.forEach((zname,zi)=>{
+    const zone=document.createElement('div');
+    zone.className='dd-zone';
+    zone.innerHTML=`<span class="dd-zone-label">${zname}</span><span class="dd-zone-drop" id="drop-${zi}">— Taruh di sini —</span>`;
+    zone.ondragover=e=>{e.preventDefault();zone.classList.add('dragover');};
+    zone.ondragleave=()=>zone.classList.remove('dragover');
+    zone.ondrop=e=>{
+      e.preventDefault();
+      zone.classList.remove('dragover');
+      if(!draggedChip)return;
+      // remove from previous zone if any
+      Object.keys(zoneAnswers).forEach(z=>{
+        if(zoneAnswers[z]===draggedChip)zoneAnswers[z]=null;
+      });
+      zoneAnswers[zname]=draggedChip;
+      updateDropZones(q);
+      draggedChip=null;
+    };
+    // touch drop
+    zone.addEventListener('touchend',e=>{
+      if(!draggedChip)return;
+      Object.keys(zoneAnswers).forEach(z=>{if(zoneAnswers[z]===draggedChip)zoneAnswers[z]=null;});
+      zoneAnswers[zname]=draggedChip;
+      updateDropZones(q);
+      draggedChip=null;
+    },{ passive:true });
+    zones.appendChild(zone);
+  });
+
+  const checkBtn=document.createElement('button');
+  checkBtn.className='btn-check';
+  checkBtn.textContent='✅ Cek Jawaban';
+  checkBtn.style.marginTop='14px';
+  checkBtn.onclick=()=>checkDragDrop(q,checkBtn);
+
+  area.appendChild(pool);
+  area.appendChild(zones);
+  area.appendChild(checkBtn);
+}
+
+function updateDropZones(q){
+  q.zones.forEach((zname,zi)=>{
+    const el=document.getElementById('drop-'+zi);
+    if(el){
+      el.textContent=zoneAnswers[zname]||'— Taruh di sini —';
+      el.style.color=zoneAnswers[zname]?'var(--accent)':'var(--text2)';
+    }
+  });
+  // update chips pool
+  const pool=document.getElementById('chip-pool');
+  if(pool){
+    const placed=Object.values(zoneAnswers).filter(Boolean);
+    pool.querySelectorAll('.dd-chip').forEach(c=>{
+      c.classList.toggle('placed',placed.includes(c.dataset.ip));
+    });
+  }
+}
+
+function checkDragDrop(q,btn){
+  if(answered)return;
+  const allFilled=q.zones.every(z=>zoneAnswers[z]);
+  if(!allFilled){btn.textContent='⚠️ Isi semua kotak dulu!';setTimeout(()=>btn.textContent='✅ Cek Jawaban',1500);return;}
+  answered=true;
+  btn.disabled=true;
+  let correct=true;
+  q.zones.forEach((zname,zi)=>{
+    const isRight=zoneAnswers[zname]===q.answers[zi];
+    const zone=document.querySelectorAll('.dd-zone')[zi];
+    zone.classList.add(isRight?'correct-zone':'wrong-zone');
+    if(!isRight)correct=false;
+  });
+  if(correct){
+    combo++;
+    const bonus=combo>=3?40:(combo>=2?30:20);
+    levelScores[currentLevel]+=bonus;
+    levelCorrect[currentLevel]++;
+    totalScore+=bonus;
+    if(combo>=2)showComboBurst();
+    showFeedback(true,`✅ Semua benar! +${bonus} poin${combo>=2?' 🔥 COMBO x'+combo:''}`,q.explain);
+  } else {
+    combo=0;
+    // show correct answers
+    let hint='Jawaban benar: ';
+    q.zones.forEach((z,i)=>hint+=`${z}=${q.answers[i]}  `);
+    showFeedback(false,'❌ Ada yang salah.',q.explain);
+    levelWrongDetails[currentLevel].push(currentQ+1);
+  }
+  updateComboDisplay();
+  updateHUD();
+  document.getElementById('btn-next').classList.add('show');
+  const isLast=currentQ===LEVELS[currentLevel].questions.length-1;
+  document.getElementById('btn-next').textContent=isLast?'Lihat Hasil →':'Soal Berikutnya →';
+}
+
+// ===== CALC =====
+function renderCalc(q, area){
+  const cont=document.createElement('div');
+  cont.className='calc-container';
+  let html=`<div class="calc-fields">`;
+  q.fields.forEach((f,i)=>{
+    html+=`<div class="calc-field"><label>${f}</label><input type="text" id="cf-${i}" placeholder="Jawaban kamu..." autocomplete="off"></div>`;
+  });
+  html+=`</div>`;
+  cont.innerHTML=html;
+  area.appendChild(cont);
+
+  const checkBtn=document.createElement('button');
+  checkBtn.className='btn-check';
+  checkBtn.textContent='🧮 Periksa Jawaban';
+  checkBtn.onclick=()=>checkCalc(q,checkBtn);
+  area.appendChild(checkBtn);
+}
+
+function checkCalc(q,btn){
+  if(answered)return;
+  const inputs=q.fields.map((_,i)=>document.getElementById('cf-'+i));
+  const allFilled=inputs.every(inp=>inp.value.trim());
+  if(!allFilled){btn.textContent='⚠️ Isi semua jawaban!';setTimeout(()=>btn.textContent='🧮 Periksa Jawaban',1500);return;}
+  answered=true;
+  btn.disabled=true;
+  let allCorrect=true;
+  inputs.forEach((inp,i)=>{
+    const userAns=inp.value.trim().toLowerCase().replace(/\s/g,'');
+    const correctAns=q.answers[i].toLowerCase().replace(/\s/g,'');
+    const ok=userAns===correctAns;
+    inp.classList.add(ok?'correct-input':'wrong-input');
+    inp.disabled=true;
+    if(!ok)allCorrect=false;
+  });
+  if(allCorrect){
+    combo++;
+    const bonus=combo>=3?40:(combo>=2?30:20);
+    levelScores[currentLevel]+=bonus;
+    levelCorrect[currentLevel]++;
+    totalScore+=bonus;
+    if(combo>=2)showComboBurst();
+    showFeedback(true,`✅ Semua benar! +${bonus} poin${combo>=2?' 🔥 COMBO x'+combo:''}`,q.explain);
+  } else {
+    combo=0;
+    showFeedback(false,'❌ Ada jawaban yang kurang tepat.',q.explain);
+    levelWrongDetails[currentLevel].push(currentQ+1);
+  }
+  updateComboDisplay();
+  updateHUD();
+  document.getElementById('btn-next').classList.add('show');
+  const isLast=currentQ===LEVELS[currentLevel].questions.length-1;
+  document.getElementById('btn-next').textContent=isLast?'Lihat Hasil →':'Soal Berikutnya →';
+}
+
+// ===== HELPERS =====
+function showFeedback(correct,title,explain){
+  const fb=document.getElementById('feedback-box');
+  fb.className=`feedback-box ${correct?'fb-correct':'fb-wrong'} show`;
+  fb.innerHTML=`<strong>${title}</strong>${explain}`;
+}
+
+function showComboBurst(){
+  const el=document.getElementById('combo-burst');
+  el.textContent=`🔥 COMBO x${combo}!`;
+  el.classList.remove('fire');
+  void el.offsetWidth;
+  el.classList.add('fire');
+}
+
+function updateComboDisplay(){
+  const el=document.getElementById('combo-display');
+  const val=document.getElementById('combo-val');
+  if(combo>=2){el.style.display='flex';val.textContent=combo;}
+  else el.style.display='none';
+}
+
+function nextQuestion(){
+  const total=LEVELS[currentLevel].questions.length;
+  if(currentQ<total-1){currentQ++;renderQuestion();}
+  else showLevelResult();
+}
+
+function showLevelResult(){
+  clearTimer();
+  const lvl=currentLevel;
+  const correct=levelCorrect[lvl];
+  const total=LEVELS[lvl].questions.length;
+  const score=levelScores[lvl];
+  const acc=Math.round((correct/total)*100);
+  let stars=0;
+  if(acc===100)stars=3;else if(acc>=60)stars=2;else if(acc>=40)stars=1;
+  levelStars[lvl]=stars;
+  if(lvl<3)unlockLevel(lvl+1);
+  markComplete(lvl,stars);
+
+  let starStr='';for(let i=0;i<3;i++)starStr+=i<stars?'⭐':'☆';
+  let emoji='🎉',title='Level Selesai!';
+  if(acc===100){emoji='🏅';title='SEMPURNA!';}
+  else if(acc>=60){emoji='👍';title='Bagus!';}
+  else{emoji='📚';title='Tetap Semangat!';}
+
+  let msg='';
+  const wrongs=levelWrongDetails[lvl];
+  if(acc===100)msg='<strong>Luar biasa!</strong> Semua soal benar! Pemahaman subnetting kamu sangat baik. Lanjut ke level berikutnya!';
+  else if(acc>=60)msg=`<strong>Bagus!</strong> Kamu masih perlu review soal nomor: <strong style="color:var(--danger)">${wrongs.join(', ')}</strong>. Baca kembali materi dan coba lagi!`;
+  else msg=`<strong>Jangan menyerah!</strong> Soal yang perlu dipelajari lagi: nomor <strong style="color:var(--danger)">${wrongs.join(', ')}</strong>. Baca ulang materi sebelum lanjut.`;
+
+  document.getElementById('result-emoji').textContent=emoji;
+  document.getElementById('result-title').textContent=title;
+  document.getElementById('result-sub').textContent=`Level ${lvl} — ${LEVELS[lvl].name}`;
+  document.getElementById('result-score').textContent=score;
+  document.getElementById('result-stars').textContent=starStr;
+  document.getElementById('rs-correct').textContent=correct;
+  document.getElementById('rs-wrong').textContent=total-correct;
+  document.getElementById('rs-acc').textContent=acc+'%';
+  document.getElementById('result-msg').innerHTML=msg;
+  document.getElementById('btn-next-level').textContent=lvl===3?'🏆 Lihat Hasil Akhir':`Lanjut ke Level ${lvl+1} →`;
+  goTo('screen-result');
+}
+
+function nextLevelOrFinish(){
+  if(currentLevel===3)showFinal();
+  else startLevel(currentLevel+1);
+}
+
+function showFinal(){
+  const total=Object.values(levelScores).reduce((a,b)=>a+b,0);
+  let allStars=0;[1,2,3].forEach(l=>allStars+=levelStars[l]);
+  let starStr='';for(let i=0;i<9;i++)starStr+=i<allStars?'⭐':'☆';
+  document.getElementById('final-total').textContent=total;
+  document.getElementById('final-stars').textContent=starStr;
+
+  // grade
+  let weakLevels=[];
+  [1,2,3].forEach(l=>{if(levelStars[l]<2)weakLevels.push(`Level ${l} (${LEVELS[l].name})`);});
+
+  document.getElementById('final-breakdown').innerHTML=[1,2,3].map(l=>{
+    let ls='';for(let i=0;i<3;i++)ls+=i<levelStars[l]?'⭐':'☆';
+    return `<div class="fb-row"><span class="fb-name">Level ${l} — ${LEVELS[l].name}</span><span class="fb-score">${levelScores[l]} ${ls}</span></div>`;
+  }).join('');
+
+  ['gr-a','gr-b','gr-c','gr-d'].forEach(r=>document.getElementById(r).classList.remove('active'));
+  if(total>=540)document.getElementById('gr-a').classList.add('active');
+  else if(total>=420)document.getElementById('gr-b').classList.add('active');
+  else if(total>=300)document.getElementById('gr-c').classList.add('active');
+  else document.getElementById('gr-d').classList.add('active');
+
+  // save to leaderboard (session memory)
+  const entry={
+    name:studentName, total,
+    l1:levelScores[1],l2:levelScores[2],l3:levelScores[3],
+    s1:levelStars[1],s2:levelStars[2],s3:levelStars[3],
+    weakLevels,
+    time:new Date().toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'})
+  };
+  // remove duplicate name, keep highest
+  leaderboard=leaderboard.filter(e=>e.name.toLowerCase()!==studentName.toLowerCase());
+  leaderboard.push(entry);
+  leaderboard.sort((a,b)=>b.total-a.total);
+
+  goTo('screen-final');
+}
+
+// ===== LEADERBOARD =====
+function renderLeaderboard(){
+  const cont=document.getElementById('lb-content');
+  if(leaderboard.length===0){
+    cont.innerHTML='<div class="lb-empty">🎮 Belum ada data siswa.<br>Siswa harus menyelesaikan semua 3 level terlebih dahulu.</div>';
+    return;
+  }
+  let html='<table class="lb-table"><tr><th>#</th><th>Nama Siswa</th><th>Total</th><th>Level Detail</th><th>Perlu Bimbingan</th></tr>';
+  leaderboard.forEach((e,i)=>{
+    const rankClass=i===0?'top1':i===1?'top2':i===2?'top3':'';
+    const rankIcon=i===0?'🥇':i===1?'🥈':i===2?'🥉':(i+1);
+    const stars1=Array.from({length:3},(_,j)=>j<e.s1?'⭐':'☆').join('');
+    const stars2=Array.from({length:3},(_,j)=>j<e.s2?'⭐':'☆').join('');
+    const stars3=Array.from({length:3},(_,j)=>j<e.s3?'⭐':'☆').join('');
+    const weak=e.weakLevels.length?`<span style="color:var(--danger);font-size:.72rem;">${e.weakLevels.join(', ')}</span>`:`<span style="color:var(--accent3);font-size:.72rem;">✓ Semua baik</span>`;
+    html+=`<tr>
+      <td><div class="lb-rank ${rankClass}">${rankIcon}</div></td>
+      <td><div class="lb-name">${e.name}</div><div class="lb-detail">${e.time}</div></td>
+      <td><div class="lb-score">${e.total}</div></td>
+      <td><div class="lb-detail">L1:${e.l1} ${stars1}<br>L2:${e.l2} ${stars2}<br>L3:${e.l3} ${stars3}</div></td>
+      <td>${weak}</td>
+    </tr>`;
+  });
+  html+='</table>';
+  cont.innerHTML=html;
+}
+
+
+
+function clearLeaderboard(){
+  if(confirm('Reset semua data leaderboard?')){leaderboard=[];renderLeaderboard();}
+}
+
+function restartAll(){
+  currentLevel=1;currentQ=0;
+  levelScores={1:0,2:0,3:0};levelCorrect={1:0,2:0,3:0};
+  levelStars={1:0,2:0,3:0};levelWrongDetails={1:[],2:[],3:[]};
+  totalScore=0;combo=0;
+  updateHUD();
+  [1,2,3].forEach(l=>{
+    const c=document.getElementById('lc-'+l);
+    if(c){c.classList.remove('completed');if(l>1)c.classList.add('locked');}
+    document.getElementById('stars-'+l).textContent='☆☆☆';
+  });
+  goTo('screen-home');
+}
+</script>
+</body>
+</html>
